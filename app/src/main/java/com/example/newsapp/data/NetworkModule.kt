@@ -1,6 +1,6 @@
 package com.example.newsapp.data
 
-import com.example.newsapp.domain.news.utils.Constant
+import com.example.newsapp.utils.Constant
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,16 +23,6 @@ object NetworkModule {
             .pingInterval(30, TimeUnit.SECONDS)
             .connectTimeout(60, TimeUnit.SECONDS)
             .readTimeout(60, TimeUnit.SECONDS)
-            .addInterceptor { chain ->
-                var original = chain.request()
-                val url = original.url
-                    .newBuilder()
-                    .addQueryParameter("apiKey", Constant.API_KEY)
-                    .build()
-
-                original = original.newBuilder().url(url).addHeader("Accept", "application/json").build()
-                chain.proceed(original)
-            }
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .build()
 

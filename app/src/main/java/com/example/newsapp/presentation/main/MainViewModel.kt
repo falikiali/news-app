@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsapp.domain.news.entity.NewsEntity
 import com.example.newsapp.domain.news.usecase.NewsUseCase
-import com.example.newsapp.domain.news.utils.ResultState
+import com.example.newsapp.utils.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch

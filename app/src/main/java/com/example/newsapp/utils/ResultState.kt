@@ -1,4 +1,4 @@
-package com.example.newsapp.domain.news.utils
+package com.example.newsapp.utils
 
 sealed class ResultState<out T: Any, out U: Any> {
     data class Success<T: Any>(val data: T) : ResultState<T, Nothing>()

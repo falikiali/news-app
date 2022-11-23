@@ -1,10 +1,9 @@
 package com.example.newsapp.data.news.repository
 
-import com.example.newsapp.domain.news.utils.ResultState
+import com.example.newsapp.utils.ResultState
 import com.example.newsapp.data.news.remote.api.NewsApi
 import com.example.newsapp.data.news.remote.dto.NewsResponse
 import com.example.newsapp.domain.news.entity.NewsEntity
-import com.example.newsapp.domain.news.entity.SourceEntity
 import com.example.newsapp.domain.news.repository.NewsRepository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -30,10 +29,7 @@ class ImplNewsRepository @Inject constructor(private val newsApi: NewsApi) : New
                                 it.author,
                                 it.urlToImage,
                                 it.description,
-                                SourceEntity(
-                                    it.source?.name,
-                                    it.source?.id
-                                ),
+                                it.source?.name,
                                 it.title,
                                 it.url,
                                 it.content
