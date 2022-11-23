@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newsapp.R
 import com.example.newsapp.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.onEach
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var country: String
+    private val mainAdapter = MainAdapter()
     private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,8 +28,17 @@ class MainActivity : AppCompatActivity() {
 
         country = "id"
 
+        initRecyclerView()
         getNews(country)
         observeNews()
+    }
+
+    private fun initRecyclerView() {
+        binding.rvNews.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
+            adapter = mainAdapter
+            setHasFixedSize(true)
+        }
     }
 
     private fun getNews(country: String) {
@@ -38,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.news
             .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
             .onEach {
-                Log.d("Main Activity", it.toString())
+                mainAdapter.setData(it)
             }
             .launchIn(lifecycleScope)
     }
