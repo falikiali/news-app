@@ -11,6 +11,7 @@ import com.squareup.picasso.Picasso
 
 class MainAdapter : RecyclerView.Adapter<MainAdapter.ListViewHolder>() {
     private var listNews = ArrayList<NewsEntity>()
+    var onItemClick: ((NewsEntity) -> Unit)? = null
 
     fun setData(newListNews: List<NewsEntity>?) {
         if (newListNews == null) return
@@ -29,6 +30,12 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.ListViewHolder>() {
                 Picasso.get()
                     .load(data.urlToImage)
                     .into(ivImage)
+            }
+        }
+
+        init {
+            binding.root.setOnClickListener {
+                onItemClick?.invoke(listNews[adapterPosition])
             }
         }
     }

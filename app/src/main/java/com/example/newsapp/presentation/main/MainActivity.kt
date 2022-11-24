@@ -1,5 +1,7 @@
 package com.example.newsapp.presentation.main
 
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -31,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         initRecyclerView()
         getNews(country)
         observeNews()
+        actionEachItem()
     }
 
     private fun initRecyclerView() {
@@ -52,5 +55,13 @@ class MainActivity : AppCompatActivity() {
                 mainAdapter.setData(it)
             }
             .launchIn(lifecycleScope)
+    }
+
+    private fun actionEachItem() {
+        mainAdapter.onItemClick = {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(it.url)
+            startActivity(intent)
+        }
     }
 }
