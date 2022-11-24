@@ -5,6 +5,8 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -34,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         getNews(country)
         observeNews()
         actionEachItem()
+        observeState()
     }
 
     private fun initRecyclerView() {
@@ -62,6 +65,31 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(it.url)
             startActivity(intent)
+        }
+    }
+
+    private fun observeState() {
+        mainViewModel.state
+            .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+            .onEach { state ->
+                when(state) {
+                    is MainActivityState.Init -> Unit
+                    is MainActivityState.IsLoading -> handleLoading(state.isLoading)
+                    is MainActivityState.Error -> Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+            .launchIn(lifecycleScope)
+    }
+
+    private fun handleLoading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.shimmer.startShimmer()
+            binding.shimmer.visibility = View.VISIBLE
+            binding.rvNews.visibility = View.GONE
+        } else {
+            binding.shimmer.stopShimmer()
+            binding.shimmer.visibility = View.GONE
+            binding.rvNews.visibility = View.VISIBLE
         }
     }
 }
