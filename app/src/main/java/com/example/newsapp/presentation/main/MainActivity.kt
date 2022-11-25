@@ -12,6 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.newsapp.R
 import com.example.newsapp.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         observeNews()
         actionEachItem()
         observeState()
+        swipeRefresh()
     }
 
     private fun initRecyclerView() {
@@ -104,11 +106,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleError(message: String) {
-        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
         with(binding) {
             error.visibility = View.VISIBLE
             shimmer.visibility = View.GONE
             rvNews.visibility = View.GONE
+        }
+    }
+
+    private fun swipeRefresh() {
+        binding.swipeRefresh.setOnRefreshListener {
+            getNews(country)
+            observeNews()
+            observeState()
+            binding.swipeRefresh.isRefreshing = false
         }
     }
 }
