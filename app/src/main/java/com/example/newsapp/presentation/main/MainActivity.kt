@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
                 when(state) {
                     is MainActivityState.Init -> Unit
                     is MainActivityState.IsLoading -> handleLoading(state.isLoading)
-                    is MainActivityState.Error -> Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                    is MainActivityState.Error -> handleError(state.message)
                 }
             }
             .launchIn(lifecycleScope)
@@ -83,13 +83,32 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleLoading(isLoading: Boolean) {
         if (isLoading) {
-            binding.shimmer.startShimmer()
-            binding.shimmer.visibility = View.VISIBLE
-            binding.rvNews.visibility = View.GONE
+            with(binding) {
+                shimmer.apply {
+                    startShimmer()
+                    visibility = View.VISIBLE
+                }
+                rvNews.visibility = View.GONE
+                error.visibility = View.GONE
+            }
         } else {
-            binding.shimmer.stopShimmer()
-            binding.shimmer.visibility = View.GONE
-            binding.rvNews.visibility = View.VISIBLE
+            with(binding) {
+                shimmer.apply {
+                    stopShimmer()
+                    visibility = View.GONE
+                }
+                rvNews.visibility = View.VISIBLE
+                error.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun handleError(message: String) {
+        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+        with(binding) {
+            error.visibility = View.VISIBLE
+            shimmer.visibility = View.GONE
+            rvNews.visibility = View.GONE
         }
     }
 }
